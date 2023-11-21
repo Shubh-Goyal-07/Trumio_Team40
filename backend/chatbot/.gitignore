@@ -2,3 +2,5 @@
 *migrations
 *.env
 .env
+chroma
+chat_chroma

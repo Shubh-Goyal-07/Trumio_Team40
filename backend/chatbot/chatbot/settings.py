@@ -134,3 +134,4 @@ MEDIA_URL = '/media/'
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
+SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'

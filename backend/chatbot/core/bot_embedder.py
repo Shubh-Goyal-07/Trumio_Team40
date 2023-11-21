@@ -1,5 +1,4 @@
-from langchain.document_loaders import PyPDFLoader, PyPDFDirectoryLoader
-from langchain.document_loaders import DirectoryLoader
+from langchain.document_loaders import WebBaseLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import GooglePalmEmbeddings
 import os
@@ -8,26 +7,18 @@ from langchain.vectorstores import Chroma
 import google.generativeai as palm
 
 def parser(path):
-    if '.pdf' in path:
-        loader = PyPDFLoader(
-                            file_path=path,
-                            extract_images=False,
-                        )
-    # elif 'http' in path and '.pdf' in path:
-    #     loader = OnlinePDFLoader(
-    #                         file_path=path,
-    #                         # extract_images=False,
-    #                     )
-    else:
-        print("above directory loader")
-        loader = DirectoryLoader(
-                            path=path,
-                            glob='**/*.*',
-                        )
-    print("loader: ", loader)
-    data = loader.load()
-    print("data: ", data)
-    return data
+    print(path)
+
+    try:
+        loader = WebBaseLoader(
+            path
+        )
+        loader.requests_kwargs = {'verify' : False}
+        data = loader.load()
+        return data
+    except Exception as e:
+        print(f"Error loading PDF: {e}")
+        return None
 
 
 def split_doc_to_chunk(data):
@@ -61,20 +52,17 @@ def make_vecdb(splits, projectid):
     return vectordb.__sizeof__()
 
 
-def make_vecdb_for_project(projectid):
+def make_vecdb_for_project(projectid,file_path):
+    # print(path)
     
-    path = './media/uploads/' + projectid +'/'
-    print(path)
-    data = parser(path)
-    print("Data size: ", data.__sizeof__())
-    splits = split_doc_to_chunk(data)
-    print("Splits size: ", splits.__sizeof__())
-    vecdeb_res = make_vecdb(splits, projectid)
+    data = parser(file_path)
 
+    if(data is None): return None
+
+    # print("Data size: ", data.__sizeof__())
+    splits = split_doc_to_chunk(data)
+    # print("Splits size: ", splits.__sizeof__())
+    vecdeb_res = make_vecdb(splits, projectid)
+    print("Vector DB size: ", vecdeb_res)
     return vecdeb_res
 
-
-# if __name__ == '__main__':
-#     path = input('Enter the path of the file: ')
-#     data = parser(path)
-#     print(data)

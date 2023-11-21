@@ -1,20 +1,14 @@
 # yourapp/serializers.py
 
 from rest_framework import serializers
-from .models import UploadedFile, ProjectSession, ChatSession
-
-class UploadedFileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UploadedFile
-        fields = ['id', 'folder_name', 'file']
-
+from .models import ProjectSession, ChatSession
 
 class ProjectSessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectSession
-        fields = ['id', 'project_id', 'session_id']
+        fields = ['id', 'project_id', 'user_id','project_link']
 
 class ChatSessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChatSession
-        fields = ['id', 'session_id', 'question']
+        fields = ['id', 'project_id', 'user_id', 'question']

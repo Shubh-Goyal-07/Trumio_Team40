@@ -9,41 +9,9 @@ from langchain.prompts.prompt import PromptTemplate
 from langchain.llms import GooglePalm
 from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import VectorStoreRetrieverMemory
-# import pinecone
-# from langchain.vectorstores import Pinecone
 from langchain.vectorstores import Chroma
 from dotenv import load_dotenv, find_dotenv
 
-
-
-
-
-# def split_doc_to_chunk(document):
-#     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000,
-#                                                    chunk_overlap=100
-#                                                    )
-#     return text_splitter.split_documents(document)
-
-
-# def get_embedding_model():
-#     _ = load_dotenv(find_dotenv()) # read local .env file
-#     api_key=os.environ.get('GOOGLE_API_KEY')
-#     palm.configure(api_key=api_key)
-
-#     return GooglePalmEmbeddings()
-
-
-# def get_template():
-#     return """Combine the following Chat history and question into a Standalone Question:
-#     Chat history:
-#     {chat_history}
-#     Question:
-#     {question}  """
-
-
-# def get_custom_question_prompt(custom_template):
-
-#     return PromptTemplate.from_template(custom_template)
 
 
 
@@ -118,20 +86,10 @@ class chatbot():
 
     def __load_memory_data(self):
         directory = f"./chat_chroma/{self.session_id}"
-        if os.path.exists(directory):
-            self.vectordb_mem = Chroma(
+        self.vectordb_mem = Chroma(
                 persist_directory=directory,
                 embedding_function=self.embedding
             )
-
-            return True
-
-        self.vecdb_mem = Chroma.from_documents(
-                                                documents=['abcd',],
-                                                embedding=self.embedding,
-                                                persist_directory=directory
-                                            )
-        
 
         return True
 
@@ -142,7 +100,7 @@ class chatbot():
     def __load_memory(self):
         self.__load_memory_data()
         self.__memory_retiever()
-        self.memory = VectorStoreRetrieverMemory(retriever=self.retriever, memory_key="chat_history", return_messages=True)
+        self.memory = VectorStoreRetrieverMemory(retriever=self.retriever_mem, memory_key="chat_history", return_messages=True)
 
     # creating chain
     def __create_chain(self):
@@ -190,10 +148,6 @@ def bot_loader(session_id, project_id):
     if load_msg['status']:
         chatbot.instances[session_id] = instance
         return {'status': True, 'message': load_msg['message']}
-        # chain_msg = instance.create_chain()
-        # if chain_msg:
-        #     chatbot.instances[session_id] = instance
-        #     return {'status': True, 'message': 'Ready for chat'}
         
     return {'status': False, 'message': load_msg['message']}
 
