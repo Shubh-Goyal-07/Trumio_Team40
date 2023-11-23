@@ -1,2 +1,3 @@
-/AI experiments/.env
-/backend/chat_bot_backend/.env
+**__pycache__
+**migrations
+db.sqlite3
