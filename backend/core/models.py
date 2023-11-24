@@ -22,3 +22,10 @@ class ImageURL(models.Model):
     image_url = models.FileField(upload_to='image/', validators=[FileExtensionValidator(allowed_extensions=['jpg','png','jpeg'])])
     def __str__(self):
         return self.image_url
+    
+
+class CreateVideo(models.Model):
+    pointer_id = models.CharField(max_length=100)
+    image_id = models.CharField(max_length=100)
+    def __str__(self):
+        return self.video_url
