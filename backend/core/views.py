@@ -3,8 +3,8 @@ from django.shortcuts import render
 # Create your views here.
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Pointers
-from .serializer import PointersSerializer
+from .models import Pointers, AudioURL
+from .serializer import PointersSerializer, AudioURLSerializer
 
 class PointersView(APIView):
     queryset = Pointers.objects.all()
@@ -22,4 +22,22 @@ class VideoURLView(APIView):
     def get(self, request):
         id = request.GET.get('video_id')
         
-        return Response({"status": "success","data":'/media/'+str(id)+'.mp4'})
+        return Response({"status": "success","data":'/media/video/'+str(id)+'.mp4'})
+    
+
+class AudioURLView(APIView):
+    queryset = AudioURL.objects.all()
+    serializer_class = AudioURLSerializer
+    def post(self,request):
+        serializer = AudioURLSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+    
+    def get(self, request):
+        id = request.GET.get('user_id')
+        audio = AudioURL.objects.filter(user_id=id)
+        serializer = AudioURLSerializer(audio, many=True)
+        return Response({"status": "success","data":serializer.data})
+
