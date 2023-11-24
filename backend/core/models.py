@@ -16,3 +16,9 @@ class AudioURL(models.Model):
     audio_url = models.FileField(upload_to='audio/', validators=[FileExtensionValidator(allowed_extensions=['mp3'])])
     def __str__(self):
         return self.audio_url
+
+class ImageURL(models.Model):
+    user_id = models.CharField(max_length=100)
+    image_url = models.FileField(upload_to='image/', validators=[FileExtensionValidator(allowed_extensions=['jpg','png','jpeg'])])
+    def __str__(self):
+        return self.image_url
