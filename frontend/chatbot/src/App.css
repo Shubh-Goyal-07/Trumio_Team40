@@ -3,7 +3,7 @@
 *{
   margin: 0px;
   padding: 0px;
-  background-color: rgb(249, 249, 249);
+  background-color: #f3f3f3;
   font-family: 'Montserrat', Helvetica, sans-serif;
 }
 
@@ -64,6 +64,7 @@
   margin: 15px 8px 16px 14px;
   background-color: rgb(255, 0, 162);
 }
+
 .chat-selection-container .search-section .search-bar{
   color: rgb(183, 183, 183);
   font-size: 13px;
@@ -210,3 +211,4 @@
   box-sizing: border-box;
   margin: 0px 0px 0px 15px;
 }
+
