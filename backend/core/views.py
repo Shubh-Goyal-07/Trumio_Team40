@@ -98,7 +98,7 @@ class CreateVideoView(APIView):
                             "type":"text",
                             "input": pointer_text #need to get actual content from llm
                         },
-                        "source_url": "backendurl"+str(image_url),
+                        "source_url": backendurl+str(image_url),
                     }
                       )
         if(res_from_post.status_code==400):
