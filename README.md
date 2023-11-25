@@ -1,6 +1,6 @@
 ## Setup ( Chatbot )
 
+python 3.10 is required
 ```
-conda env create -f ./backend/chatbot/environment.yml
-conda activate chatbot
+pip install -r requirements.txt
 ```
