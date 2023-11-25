@@ -7,7 +7,7 @@ from .models import Pointers, AudioURL, ImageURL, CreateVideo
 from .serializer import PointersSerializer, AudioURLSerializer, ImageURLSerializer, CreateVideoSerializer
 from .dump_video import dump_video
 import time
-
+backendurl = "https://avatar.rohitkori.tech"
 import environ
 env = environ.Env()
 environ.Env.read_env()
@@ -73,12 +73,14 @@ class CreateVideoView(APIView):
     serializer_class = CreateVideoSerializer
     def post(self, request):
         image_id = request.POST.get('image_id')
+        image_id = request.POST.get('image_id')
         image = ImageURL.objects.filter(id=image_id)
         serializer = ImageURLSerializer(image, many=True)
         if(len(serializer.data)==0):
             return Response({"status": "failed","data":"no image found"})
         image_url = serializer.data[0]['image_url']
 
+        pointer_id = request.POST.get('pointer_id')
         pointer_id = request.POST.get('pointer_id')
         pointer = Pointers.objects.filter(id=pointer_id)
         serializer = PointersSerializer(pointer, many=True)
@@ -99,38 +101,46 @@ class CreateVideoView(APIView):
                             "input": pointer_text #need to get actual content from llm
                         },
                         "source_url": backendurl+str(image_url),
+                        "source_url": backendurl+str(image_url),
                     }
                       )
+        
+        print(res_from_post)
         if(res_from_post.status_code==400):
             return Response({"status": "failed","data":"Something went wrong"})
-        getid = res_from_post['id']
+        res_from_post = res_from_post.json()
+        
+        print(res_from_post)
 
-        time.sleep(secs=10)
+        getid = res_from_post.get('id')
+        if(getid is None): return Response({"status": "failed","data":res_from_post.get('kind')})
+        print(getid)
+        
+        time.sleep(5)
         res = requests.get(url+'/'+getid,
                     headers={
                         "Authorization": "Basic "+SECRET_KEY_API
                     },)
+        # x = dict(res)
+        # print(x)
+        # return Response({"status": "success","data":res})
+    
         if(res.status_code==400):
             return Response({"status": "failed","data":"Something went wrong"})
+        res = res.json()
+        print(res)
         
-        if(res["status"]=="created"):
-            videourl = res["result_url"]
-            dump_video(videourl,pointer_id)
-            return Response({"status": "success","data":'/media/video/'+str(pointer_id)+'.mp4'})
-        elif(res["status"]=="started"):
-            time.sleep(secs=5)
+        print(res.get("status"))
+
+        while(res.get("status")!="done"):
+            time.sleep(5)
             res = requests.get(url+'/'+getid,
                     headers={
-                        "Authorization": "Basic Z295YWwuMjJAaWl0ai5hYy5pbg:aPBZD7T5PJvo3Wgkepy6E"
+                        "Authorization": "Basic "+SECRET_KEY_API
                     },)
-            if(res["status"]=="created"):
-                videourl = res["result_url"]
-                dump_video(videourl,pointer_id)
-                return Response({"status": "success","data":'/media/video/'+str(pointer_id)+'.mp4'})
-            else:
-                return Response({"status": "failed","data":"something went wrong"})
-
-        elif(res["status"]=="rejected" or res["status"]=="error"):
-            return Response({"status": "failed","data":"rejected"})
-
-        return Response({"status": "success","data":"something went wrong"})
+        
+        videourl = res.get("result_url")
+        print(videourl)
+        dump_video(videourl,pointer_id)
+        return Response({"status": "success","data":'/media/video/'+str(pointer_id)+'.mp4'})
+        
