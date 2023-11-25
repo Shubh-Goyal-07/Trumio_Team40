@@ -6,7 +6,7 @@ import axios from 'axios'
 export default function Chat() {
   const [projectChats,setProjectChats] = useState(true);
   const [selectedProject,setSelectedProject] = useState("");
-  const [inputText, setInputText] = useState('');
+  const [inputText, setInputText] = useState("Trumio");
   const userName = "Asharma538";
 
   const handleSelectedProject = (project) => {
@@ -36,7 +36,7 @@ export default function Chat() {
 
     axios({
       method: 'POST',
-      url: 'http://127.0.0.1:8000/chat/',
+      url: 'http://chatbot.rohitkori.tech/chat/',
       data: {
         project_id: selectedProject,
         user_id: userName,
