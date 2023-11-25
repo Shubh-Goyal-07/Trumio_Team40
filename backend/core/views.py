@@ -13,6 +13,8 @@ env = environ.Env()
 environ.Env.read_env()
 SECRET_KEY_API = env('SECRET_KEY_API')
 
+backendurl = "https://avatar.rohitkori.tech/"
+
 class PointersView(APIView):
     queryset = Pointers.objects.all()
     serializer_class = PointersSerializer
