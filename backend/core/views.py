@@ -72,14 +72,14 @@ class CreateVideoView(APIView):
     queryset = CreateVideo.objects.all()
     serializer_class = CreateVideoSerializer
     def post(self, request):
-        image_id = request.GET.get('image_id')
+        image_id = request.POST.get('image_id')
         image = ImageURL.objects.filter(id=image_id)
         serializer = ImageURLSerializer(image, many=True)
         if(len(serializer.data)==0):
             return Response({"status": "failed","data":"no image found"})
         image_url = serializer.data[0]['image_url']
 
-        pointer_id = request.GET.get('pointer_id')
+        pointer_id = request.POST.get('pointer_id')
         pointer = Pointers.objects.filter(id=pointer_id)
         serializer = PointersSerializer(pointer, many=True)
         if(len(serializer.data)==0):
@@ -101,7 +101,7 @@ class CreateVideoView(APIView):
                         "source_url": "backendurl"+str(image_url),
                     }
                       )
-        if(res_from_post.status_code=='400'):
+        if(res_from_post.status_code==400):
             return Response({"status": "failed","data":"Something went wrong"})
         getid = res_from_post['id']
 
@@ -110,7 +110,7 @@ class CreateVideoView(APIView):
                     headers={
                         "Authorization": "Basic "+SECRET_KEY_API
                     },)
-        if(res.status_code=='400'):
+        if(res.status_code==400):
             return Response({"status": "failed","data":"Something went wrong"})
         
         if(res["status"]=="created"):
