@@ -3,9 +3,10 @@ from django.shortcuts import render
 import requests
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Pointers, AudioURL, ImageURL, CreateVideo
-from .serializer import PointersSerializer, AudioURLSerializer, ImageURLSerializer, CreateVideoSerializer
+from .models import Pointers, AudioURL, ImageURL, AvatarURL, CreateVideo
+from .serializer import PointersSerializer, AudioURLSerializer, ImageURLSerializer, AvatarURLSerializer, CreateVideoSerializer
 from .dump_video import dump_video
+from .generate_avatar import generate_image
 import time
 backendurl = "https://avatar.rohitkori.tech"
 import environ
@@ -56,13 +57,17 @@ class ImageURlView(APIView):
         serializer = ImageURLSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            generate_image(serializer.data['user_id'], backendurl + serializer.data['image_url'])
             return Response(serializer.data)
         return Response(serializer.errors)
 
+class GetAvatarURLView(APIView):
+    queryset = AvatarURL.objects.all()
+    serializer_class = AvatarURLSerializer
     def get(self, request):
         id = request.GET.get('user_id')
-        image = ImageURL.objects.filter(user_id=id)
-        serializer = ImageURLSerializer(image, many=True)
+        image = AvatarURL.objects.filter(user_id=id)
+        serializer = AvatarURLSerializer(image, many=True)
         return Response({"status": "success","data":serializer.data})
     
 
