@@ -3,6 +3,7 @@ import Chat from './Chat'
 import Nav from './Nav';
 import './App.css'
 import Dashboard from './Dashboard';
+import Project from './Project';
 
 export default function App() {
   const [tab,setTab] = useState(false);

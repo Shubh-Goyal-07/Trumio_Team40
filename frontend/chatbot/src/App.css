@@ -329,3 +329,70 @@
   width: calc(20% - 2px);
   border: 1px solid black;
 }
+
+.project-tab{
+  display: flex;
+}
+
+.proj-about{
+  height: 320px;
+  width: 350px;
+  border-radius: 6px;
+  margin: 20px;
+}
+
+.roadmap{
+  width: calc(100% - 100px);
+  margin: 10px 5px 50px 5px;
+  background-color: rgb(249, 249, 249);
+  border: 1px solid rgb(225, 225, 225);
+  box-shadow: rgb(227, 227, 227) 2px 2px 4px;
+}
+
+.roadmap-wrap{
+  background-color: inherit;
+  border-left: 2px dashed black;
+  margin-left: 10%;
+  padding: 50px 0px;
+}
+
+.step-case{
+  background-color: inherit;
+  display: flex;
+  align-items: center;
+  margin: 0px 16% 50px 0%;
+}
+
+.connector{
+  width: 30%;
+  height: 0px;
+  border-top: 2px dashed black;
+}
+
+.step{
+  background-image: linear-gradient(to bottom right,rgb(117, 255, 42),rgb(108, 164, 255));
+  border-radius: 10px;
+  padding: 20px;
+  font-weight: 600;
+  width: 150%;
+}
+
+.step .hdg, .step .desc{
+  background: none;
+}
+
+.hdg{
+  background-color: inherit;
+  text-decoration: underline;
+  margin-bottom: 10px;
+}
+
+.section-hdg{
+  background-color: inherit;
+  padding: 25px 20px;
+  border-bottom: 1px solid rgb(208, 208, 208);
+}
+
+.project-tab-subtabs{
+  margin: 50px 0px 0px 0px;
+}
