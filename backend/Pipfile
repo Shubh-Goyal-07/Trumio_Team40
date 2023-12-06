@@ -11,7 +11,7 @@ requests = "*"
 django-cors-headers = "*"
 lanchain = "*"
 google-generativeai = "*"
-
+pillow = "*"
 
 [dev-packages]
 

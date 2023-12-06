@@ -23,6 +23,11 @@ class ImageURL(models.Model):
     def __str__(self):
         return self.image_url
     
+class AvatarURL(models.Model):
+    user_id = models.CharField(max_length=100)
+    image_url = models.FileField(upload_to='avatar/', validators=[FileExtensionValidator(allowed_extensions=['jpg','png','jpeg'])])
+    def __str__(self):
+        return self.image_url
 
 class CreateVideo(models.Model):
     pointer_id = models.CharField(max_length=100)
