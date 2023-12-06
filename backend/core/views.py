@@ -6,6 +6,9 @@ from rest_framework.response import Response
 from .models import Pointers, AudioURL, ImageURL, CreateVideo
 from .serializer import PointersSerializer, AudioURLSerializer, ImageURLSerializer, CreateVideoSerializer
 from .dump_video import dump_video
+from .generator import generate_lecture
+
+
 import time
 backendurl = "https://avatar.rohitkori.tech"
 import environ
@@ -18,11 +21,20 @@ class PointersView(APIView):
     serializer_class = PointersSerializer
 
     def post(self, request):
-        serializer = PointersSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors)
+        topic = request.POST.get('topic')
+        pointers = request.POST.get('pointers')
+
+        lect_txt = generate_lecture(topic, pointers)
+        print(lect_txt)
+        if(lect_txt):
+            serializer = PointersSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"content" : lect_txt})
+            
+            return Response(serializer.errors)
+        else:
+            return Response({"status": "failed","data":"Something went wrong"})
     
 
 class VideoURLView(APIView):
