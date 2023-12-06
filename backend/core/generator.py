@@ -1,6 +1,5 @@
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from dotenv import load_dotenv
 import google.generativeai as palm
 import os
 from langchain.embeddings import GooglePalmEmbeddings
@@ -11,7 +10,6 @@ from langchain.llms import GooglePalm
 from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import VectorStoreRetrieverMemory
 from langchain.vectorstores import Chroma
-from dotenv import load_dotenv, find_dotenv
 import environ
 env = environ.Env()
 environ.Env.read_env()
