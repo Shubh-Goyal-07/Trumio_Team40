@@ -9,9 +9,10 @@ djangorestframework = "*"
 django-environ = "*"
 requests = "*"
 django-cors-headers = "*"
-lanchain = "*"
+langchain = "*"
 google-generativeai = "*"
 pillow = "*"
+charset-normalizer = "*"
 
 [dev-packages]
 
