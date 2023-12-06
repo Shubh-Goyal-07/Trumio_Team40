@@ -22,7 +22,7 @@ urlpatterns = [
     path('send-pointer', PointersView.as_view(), name='send-pointer'),
     path('get-videourl',VideoURLView.as_view(), name='get-videourl'),
     path('audio', AudioURLView.as_view(), name='audio'),
-    path('post-image', ImageURlView.as_view(), name='post-image'),
+    path('create-image', ImageURlView.as_view(), name='create-image'),
     path('get-avatar', GetAvatarURLView.as_view(), name='get-avatar'),
     path('create-video', CreateVideoView.as_view(), name='create-video'),
 ]
