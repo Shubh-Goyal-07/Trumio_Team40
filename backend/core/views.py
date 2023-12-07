@@ -17,6 +17,8 @@ environ.Env.read_env()
 backendurl = "https://avatar.rohitkori.tech"
 SECRET_KEY_API = env('SECRET_KEY_API')
 
+backendurl = "https://avatar.rohitkori.tech/"
+
 class PointersView(APIView):
     queryset = Pointers.objects.all()
     serializer_class = PointersSerializer
@@ -102,7 +104,7 @@ class CreateVideoView(APIView):
                             "type":"text",
                             "input": content 
                         },
-                        "source_url": backendurl+str(imageURL),
+                        "source_url": backendurl+str(image_url),
                     }
                       )
         
