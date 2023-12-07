@@ -89,22 +89,9 @@ class CreateVideoView(APIView):
     queryset = CreateVideo.objects.all()
     serializer_class = CreateVideoSerializer
     def post(self, request):
-        image_id = request.POST.get('image_id')
-        image_id = request.POST.get('image_id')
-        image = ImageURL.objects.filter(id=image_id)
-        serializer = ImageURLSerializer(image, many=True)
-        if(len(serializer.data)==0):
-            return Response({"status": "failed","data":"no image found"})
-        image_url = serializer.data[0]['image_url']
-
-        pointer_id = request.POST.get('pointer_id')
-        pointer_id = request.POST.get('pointer_id')
-        pointer = Pointers.objects.filter(id=pointer_id)
-        serializer = PointersSerializer(pointer, many=True)
-        if(len(serializer.data)==0):
-            return Response({"status": "failed","data":"no pointer found"})
-        pointer_text = serializer.data[0]['pointer']
-
+        imageURL = request.POST.get('image_url')
+        content = request.POST.get('content')
+        uniqid = request.POST.get('unique_id')
 
         url = 'https://api.d-id.com/talks'
 
@@ -115,9 +102,8 @@ class CreateVideoView(APIView):
                     json={
                         "script":{
                             "type":"text",
-                            "input": pointer_text #need to get actual content from llm
+                            "input": content 
                         },
-                        "source_url": backendurl+str(image_url),
                         "source_url": backendurl+str(image_url),
                     }
                       )
@@ -158,6 +144,6 @@ class CreateVideoView(APIView):
         
         videourl = res.get("result_url")
         print(videourl)
-        dump_video(videourl,pointer_id)
-        return Response({"status": "success","data":'/media/video/'+str(pointer_id)+'.mp4'})
+        dump_video(videourl,uniqid)
+        return Response({"status": "success","data":'/media/video/'+str(uniqid)+'.mp4'})
         

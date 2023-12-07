@@ -39,4 +39,4 @@ class CreateVideo(models.Model):
     pointer_id = models.CharField(max_length=100)
     image_id = models.CharField(max_length=100)
     def __str__(self):
-        return self.video_url
+        return self.pointer_id
