@@ -192,15 +192,22 @@ class TimelineView(APIView):
         id = request.GET.get('project_id')
         timeline = Timeline.objects.filter(project_id=id)
 
-        timeline_json=[]
-        for i in range(len(timeline)):
-            data = {
-                "project_id": timeline[i].project_id,
-                "project_name": timeline[i].project_name,
-                "weeks": timeline[i].weeks,
-                "timeline": timeline[i].timeline
-            }
-            timeline_json.append(data)
-        return Response({"status": "success","data":timeline_json})
+        timeline0 = timeline[0]
+
+        splitteddata = timeline0.timeline.split("Week")
+        print(splitteddata)
+        weekdata=[]
+        for i in splitteddata:
+            if(i!=""):
+                weekdata.append("Week"+i)
+            
+        data = {
+            "project_id": timeline0.project_id,
+            "project_name": timeline0.project_name,
+            "weeks": timeline0.weeks,
+            "timeline": weekdata
+        }
+
+        return Response({"status": "success","data":data})
     
     
