@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Pointers, AudioURL, ImageURL, CreateVideo, AvatarURL
+from .models import Pointers, AudioURL, ImageURL, CreateVideo, AvatarURL, Timeline
 
 
 class PointersSerializer(serializers.ModelSerializer):
@@ -28,3 +28,9 @@ class CreateVideoSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreateVideo
         fields = ['id','user_id','image_url', 'content','unique_id']
+
+
+class TimelineSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Timeline
+        fields = ['id','project_id', 'project_name', 'weeks']

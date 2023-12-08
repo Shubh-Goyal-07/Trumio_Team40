@@ -3,12 +3,13 @@ from django.shortcuts import render
 import requests
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Pointers, AudioURL, ImageURL, AvatarURL, CreateVideo
-from .serializer import PointersSerializer, AudioURLSerializer, ImageURLSerializer, AvatarURLSerializer, CreateVideoSerializer
+from .models import Pointers, AudioURL, ImageURL, AvatarURL, CreateVideo, Timeline
+from .serializer import PointersSerializer, AudioURLSerializer, ImageURLSerializer, AvatarURLSerializer, CreateVideoSerializer, TimelineSerializer
 from .generate_avatar import generate_image
 from .generator import generate_lecture
 from .dump_video import dump_video
 from .flashcard import unmark
+from .timeline import timeline_generator
 import time
 import environ
 env = environ.Env()
@@ -21,10 +22,11 @@ environ.Env.read_env()
 
 
 
-backendurl = "https://avatar.rohitkori.tech"
+# backendurl = "https://avatar.rohitkori.tech"
 SECRET_KEY_API = env('SECRET_KEY_API')
 
 backendurl = "https://avatar.rohitkori.tech/"
+
 
 class PointersView(APIView):
     queryset = Pointers.objects.all()
@@ -166,3 +168,39 @@ class CreateVideoView(APIView):
         print(videourl,4)
         dump_video(videourl,uniqid)
         return Response({"status": "success","data":'/media/video/'+str(uniqid)+'.mp4'})
+    
+
+class TimelineView(APIView):
+    queryset = CreateVideo.objects.all()
+    serializer_class = TimelineSerializer
+    def post(self, request):
+        project_id = request.POST.get('project_id')
+        project_name = request.POST.get('project_name')
+        weeks = request.POST.get('weeks')
+        print(request.data)
+        serializer = TimelineSerializer(data=request.data)
+        # request.data['timeline'] = timeline_generator(project_name,weeks)
+        # serializer = TimelineSerializer(data=request.data)
+        timeline = timeline_generator(project_name,weeks)
+        timeline_instance = Timeline(project_id=project_id,project_name=project_name,weeks=weeks,timeline=timeline)
+        if serializer.is_valid():
+            timeline_instance.save()
+            return Response({"status": "success","data":serializer.data, "timeline":timeline})
+        return Response({"status": "failed","data":serializer.errors})
+    
+    def get(self, request):
+        id = request.GET.get('project_id')
+        timeline = Timeline.objects.filter(project_id=id)
+
+        timeline_json=[]
+        for i in range(len(timeline)):
+            data = {
+                "project_id": timeline[i].project_id,
+                "project_name": timeline[i].project_name,
+                "weeks": timeline[i].weeks,
+                "timeline": timeline[i].timeline
+            }
+            timeline_json.append(data)
+        return Response({"status": "success","data":timeline_json})
+    
+    
