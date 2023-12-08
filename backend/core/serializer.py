@@ -6,7 +6,7 @@ from .models import Pointers, AudioURL, ImageURL, CreateVideo, AvatarURL
 class PointersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pointers
-        fields = ['id', 'user_id', 'pointer', 'topic']
+        fields = ['id', 'user_id', 'pointers', 'topic']
 
 
 class AudioURLSerializer(serializers.ModelSerializer):
@@ -27,4 +27,4 @@ class AvatarURLSerializer(serializers.ModelSerializer):
 class CreateVideoSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreateVideo
-        fields = ['id','pointer_id', 'image_id']
+        fields = ['id','user_id','image_url', 'content','unique_id']

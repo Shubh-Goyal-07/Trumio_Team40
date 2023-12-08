@@ -8,10 +8,17 @@ from .serializer import PointersSerializer, AudioURLSerializer, ImageURLSerializ
 from .generate_avatar import generate_image
 from .generator import generate_lecture
 from .dump_video import dump_video
+from .flashcard import unmark
 import time
 import environ
 env = environ.Env()
 environ.Env.read_env()
+
+
+
+
+
+
 
 
 backendurl = "https://avatar.rohitkori.tech"
@@ -24,8 +31,9 @@ class PointersView(APIView):
     def post(self, request):
         topic = request.POST.get('topic')
         pointers = request.POST.get('pointers')
-
+        print(topic,pointers)
         lect_txt = generate_lecture(topic, pointers)
+        print(topic,pointers)
         print(lect_txt)
         if(lect_txt):
             serializer = PointersSerializer(data=request.data)
@@ -53,7 +61,7 @@ class AudioURLView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors)
+        return Response({"status" : "failed","data" : serializer.errors})
     
     def get(self, request):
         id = request.GET.get('user_id')
@@ -90,8 +98,15 @@ class CreateVideoView(APIView):
         imageURL = request.POST.get('image_url')
         content = request.POST.get('content')
         uniqid = request.POST.get('unique_id')
-
         url = 'https://api.d-id.com/talks'
+
+
+        x = unmark(content).replace("\\n"," ")
+        y = x.replace("*"," ")
+        y = y.replace(":"," ")
+        y = repr(" ".join(y.split()))
+        print(y)
+        print(len(y))
 
         res_from_post = requests.post(url,
                     headers={
@@ -100,18 +115,21 @@ class CreateVideoView(APIView):
                     json={
                         "script":{
                             "type":"text",
-                            "input": content 
+                            "input": str(y[:2000])
                         },
                         "source_url": backendurl+str(imageURL),
-                    }
+                        "provider":{
+                            "type": "amazon" 
+                        }
+                    },timeout=500
                       )
         
-        print(res_from_post)
+        print(res_from_post,1)
         if(res_from_post.status_code==400):
             return Response({"status": "failed","data":"Something went wrong"})
         res_from_post = res_from_post.json()
         
-        print(res_from_post)
+        print(res_from_post,2)
 
         getid = res_from_post.get('id')
         if(getid is None): return Response({"status": "failed","data":res_from_post.get('kind')})
@@ -122,14 +140,12 @@ class CreateVideoView(APIView):
                     headers={
                         "Authorization": "Basic "+SECRET_KEY_API
                     },)
-        # x = dict(res)
-        # print(x)
-        # return Response({"status": "success","data":res})
+
     
         if(res.status_code==400):
             return Response({"status": "failed","data":"Something went wrong"})
         res = res.json()
-        print(res)
+        print(res,3)
         
         print(res.get("status"))
 
@@ -139,9 +155,12 @@ class CreateVideoView(APIView):
                     headers={
                         "Authorization": "Basic "+SECRET_KEY_API
                     },)
-        
+            res = res.json()
+            print(res)
+            print()
+            print()
+        print(res)
         videourl = res.get("result_url")
-        print(videourl)
+        print(videourl,4)
         dump_video(videourl,uniqid)
         return Response({"status": "success","data":'/media/video/'+str(uniqid)+'.mp4'})
-        

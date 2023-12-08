@@ -6,7 +6,7 @@ from django.db import models
 class Pointers(models.Model):
     id = models.AutoField(primary_key=True)
     user_id = models.CharField(max_length=100)
-    pointer = models.CharField(max_length=100)
+    pointers = models.TextField()
     topic = models.CharField(max_length=100)
     def __str__(self):
         return self.pointer
@@ -30,7 +30,9 @@ class AvatarURL(models.Model):
         return self.image_url
 
 class CreateVideo(models.Model):
-    pointer_id = models.CharField(max_length=100)
-    image_id = models.CharField(max_length=100)
+    image_url = models.CharField(max_length=100)
+    content = models.TextField()
+    user_id = models.CharField(max_length=100)
+    unique_id = models.CharField(max_length=100)
     def __str__(self):
-        return self.pointer_id
+        return self.image_url
