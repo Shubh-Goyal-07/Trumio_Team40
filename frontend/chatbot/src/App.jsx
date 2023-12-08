@@ -1,24 +1,24 @@
 import React, { useState } from 'react'
-import Chat from './Chat'
+import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import Nav from './Nav';
 import './App.css'
 import Dashboard from './Dashboard';
 import Project from './Project';
+import Chat from './Chat'
+import EHub from './EHub';
 
 export default function App() {
-  const [tab,setTab] = useState(false);
-  const handleTabChange = (status) => {
-    setTab(status);
-  }
+  
   return(
-    <div>
-      <Nav changeTab={handleTabChange}/>  
-      {
-        tab?
-        <Dashboard/>
-        :
-        <Chat/>
-      }
-    </div>
+    <BrowserRouter>
+      <Nav/>
+      <Routes>
+          <Route path="/" element={<Dashboard/>} />
+          <Route path="/dashboard" element={<Dashboard/>} />
+          <Route path="/ehub" element={<EHub/>} />
+          <Route path="/chat" element={<Chat/>} />
+          <Route path="/projects" element={<Project/>} />
+      </Routes>
+    </BrowserRouter>
   )
 }
