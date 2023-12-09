@@ -72,7 +72,7 @@ class ImageURlView(APIView):
         if serializer.is_valid():
             serializer.save()
             try:
-                avatar_json = generate_avatar(backendurl + serializer.data['image_url'])
+                avatar_json = generate_avatar(backendurl + "media/"+serializer.data['image_url'])
                 return Response({"status": "success","data":serializer.data,"avatar":avatar_json})
             except:
                 return Response({"status": "failed","data":"Something went wrong with the API"})
@@ -123,7 +123,7 @@ class CreateVideoView(APIView):
 
         res_from_post = requests.post(url,
                     headers={
-                        "Authorization": "Basic "+SECRET_KEY_API
+                        "Authorization": "Basic "+DID_API_KEY
                     },
                     json={
                         "script":{
