@@ -243,6 +243,8 @@ class FlashCardView(APIView):
         id = request.GET.get('project_id')
         flashcard = FlashCard.objects.filter(project_id=id)
         
+        if(len(flashcard)==0):
+            return Response({"status": "failed","data":"No data found"})
         flashcard_instance = flashcard[0]
 
         # print(flashcard_instance.content)
