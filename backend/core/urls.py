@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import PointersView, VideoURLView, AudioURLView, ImageURlView, GetAvatarURLView, CreateVideoView, TimelineView
+from .views import PointersView, VideoURLView, AudioURLView, ImageURlView, GetAvatarURLView, CreateVideoView, TimelineView, FlashCardView
 
 urlpatterns = [
     path('send-pointer', PointersView.as_view(), name='send-pointer'),
@@ -25,5 +25,6 @@ urlpatterns = [
     path('create-image', ImageURlView.as_view(), name='create-image'),
     path('get-avatar', GetAvatarURLView.as_view(), name='get-avatar'),
     path('create-video', CreateVideoView.as_view(), name='create-video'),
-    path('timeline', TimelineView.as_view(), name='timeline')
+    path('timeline', TimelineView.as_view(), name='timeline'),
+    path('flashcard', FlashCardView.as_view(), name='flashcard'),
 ]

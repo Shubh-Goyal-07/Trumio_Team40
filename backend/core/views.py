@@ -3,14 +3,15 @@ from django.shortcuts import render
 import requests
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Pointers, AudioURL, ImageURL, AvatarURL, CreateVideo, Timeline
-from .serializer import PointersSerializer, AudioURLSerializer, ImageURLSerializer, AvatarURLSerializer, CreateVideoSerializer, TimelineSerializer
+from .models import Pointers, AudioURL, ImageURL, AvatarURL, CreateVideo, Timeline, FlashCard
+from .serializer import PointersSerializer, AudioURLSerializer, ImageURLSerializer, AvatarURLSerializer, CreateVideoSerializer, TimelineSerializer, FlashCardSerializer
 from .generate_avatar import generate_image
 from .generator import generate_lecture
 from .dump_video import dump_video
-from .flashcard import unmark
+from .flashcard import unmark, flashcard_text_generator
 from .timeline import timeline_generator
 import time
+import json
 import environ
 env = environ.Env()
 environ.Env.read_env()
@@ -221,3 +222,35 @@ class TimelineView(APIView):
         return Response({"status": "success","data":data})
     
     
+class FlashCardView(APIView):
+    queryset = FlashCard.objects.all()
+    serializer_class = FlashCardSerializer
+    def post(self, request):
+        project_id = request.POST.get('project_id')
+        project_name = request.POST.get('project_name')
+        summary = request.POST.get('summary')
+
+        content = flashcard_text_generator(project_name,summary)
+        image = "https://avatar.rohitkori.tech/media/avatar/arnav.png"
+        serializer = FlashCardSerializer(data=request.data)
+        flashcard_instance = FlashCard(project_id=project_id,project_name=project_name,summary=summary,image=image,content=content)
+        if serializer.is_valid():
+            flashcard_instance.save()
+            return Response({"status": "success","data":serializer.data,"image":image})
+        return Response({"status": "failed","data":serializer.errors})
+    
+    def get(self, request):
+        id = request.GET.get('project_id')
+        flashcard = FlashCard.objects.filter(project_id=id)
+        
+        flashcard_instance = flashcard[0]
+
+        # print(flashcard_instance.content)
+        data = {
+            "project_id": flashcard_instance.project_id,
+            "project_name": flashcard_instance.project_name,
+            "summary": flashcard_instance.summary,
+            "image": flashcard_instance.image,
+            "content": flashcard_instance.content
+        }
+        return Response({"status": "success","data":data})

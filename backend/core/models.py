@@ -52,3 +52,15 @@ class Timeline(models.Model):
     def __str__(self):
         return self.project_id
     
+
+class FlashCard(models.Model):
+    project_id = models.CharField(max_length=100,unique=True)
+    project_name = models.CharField(max_length=100)
+    summary = models.TextField()
+    image = models.CharField(max_length=100)
+    content = models.TextField(default="")
+    def __str__(self):
+        return self.image
+    
+
+    

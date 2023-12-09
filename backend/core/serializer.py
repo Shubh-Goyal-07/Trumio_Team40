@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Pointers, AudioURL, ImageURL, CreateVideo, AvatarURL, Timeline
+from .models import Pointers, AudioURL, ImageURL, CreateVideo, AvatarURL, Timeline, FlashCard
 
 
 class PointersSerializer(serializers.ModelSerializer):
@@ -34,3 +34,9 @@ class TimelineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Timeline
         fields = ['id','project_id', 'project_name', 'weeks']
+
+
+class FlashCardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FlashCard
+        fields = ['project_id', 'project_name', 'summary']
