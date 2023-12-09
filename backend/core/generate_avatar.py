@@ -23,7 +23,7 @@ def preprocess_image(url):
     return img_byte_arr
 
 def generate_avatar(image_url):
-    
+    print(image_url)
     posturl = "https://api.thenextleg.io/ppu/imagine"
 
     
@@ -46,9 +46,11 @@ def generate_avatar(image_url):
         raise Exception("Something went wrong with the Avatar API")
     
     print(response_post)
-    ppuId = response_post.json()['messageId']
 
-    geturl=f"https://api.thenextleg.io/ppu/message/<messageId>?ppuId={ppuId}"
+    ppuId = response_post['ppuId']
+    messageId = response_post['messageId']
+
+    geturl=f"https://api.thenextleg.io/ppu/message/{messageId}?ppuId={ppuId}"
 
     headers = {
         'Authorization': 'Bearer '+os.environ['NEXT_LEG_API_KEY'],
@@ -56,7 +58,7 @@ def generate_avatar(image_url):
 
     response_get = requests.request("GET", geturl, headers=headers)
 
-    while(response_get.json()['progress']!=100):
+    while((response_get.json())['progress']!=100):
         time.sleep(5)
         response_get = requests.request("GET", geturl, headers=headers)
     
