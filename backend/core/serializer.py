@@ -27,7 +27,7 @@ class AvatarURLSerializer(serializers.ModelSerializer):
 class CreateVideoSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreateVideo
-        fields = ['id','user_id','image_url', 'content','unique_id']
+        fields = ['id','user_id','image_url', 'content','unique_id','topic']
 
 
 class TimelineSerializer(serializers.ModelSerializer):
