@@ -195,11 +195,21 @@ class TimelineView(APIView):
         timeline0 = timeline[0]
 
         splitteddata = timeline0.timeline.split("Week")
-        print(splitteddata)
+        # print(splitteddata)
         weekdata=[]
         for i in splitteddata:
             if(i!=""):
-                weekdata.append("Week"+i)
+                j=0
+                while(j<len(i)):
+                    if(i[j]=='T'):
+                        break
+                    j+=1
+                weekdata.append(i[j:])
+        
+        if(len(weekdata)==int(timeline0.weeks)+1):
+            weekdata = weekdata[1:]
+
+        
             
         data = {
             "project_id": timeline0.project_id,
