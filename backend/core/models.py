@@ -40,6 +40,7 @@ class CreateVideo(models.Model):
     content = models.TextField()
     user_id = models.CharField(max_length=100)
     unique_id = models.CharField(max_length=100)
+    video_url = models.CharField(max_length=100,unique=True)
     def __str__(self):
         return self.image_url
 

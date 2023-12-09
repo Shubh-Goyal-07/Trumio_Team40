@@ -168,6 +168,9 @@ class CreateVideoView(APIView):
         videourl = res.get("result_url")
         print(videourl,4)
         dump_video(videourl,uniqid)
+
+        createvideo_instance = CreateVideo(image_url=imageURL,content=content,user_id=uniqid,unique_id=uniqid,video_url='/media/video/'+str(uniqid)+'.mp4')
+        createvideo_instance.save()
         return Response({"status": "success","data":'/media/video/'+str(uniqid)+'.mp4'})
     
 
@@ -256,3 +259,9 @@ class FlashCardView(APIView):
             "content": flashcard_instance.content
         }
         return Response({"status": "success","data":data})
+    
+class GetLearningModuleView(APIView):
+    def get(self, request):
+        video = CreateVideo.objects.all()
+        serializer = CreateVideoSerializer(video, many=True)
+        return Response({"status": "success","data":serializer.data})
