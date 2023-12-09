@@ -18,10 +18,9 @@ environ.Env.read_env()
 
 
 
-# backendurl = "https://avatar.rohitkori.tech"
-DID_API_KEY = env('DID_API_KEY')
 
-backendurl = "https://avatar.rohitkori.tech/"
+backendurl = "https://avatar.rohitkori.tech"
+DID_API_KEY = env('DID_API_KEY')
 
 
 class PointersView(APIView):
@@ -72,7 +71,7 @@ class ImageURlView(APIView):
         if serializer.is_valid():
             serializer.save()
             try:
-                avatar_json = generate_avatar(backendurl + "media/"+serializer.data['image_url'])
+                avatar_json = generate_avatar(backendurl + serializer.data['image_url'])
                 return Response({"status": "success","data":serializer.data,"avatar":avatar_json})
             except:
                 return Response({"status": "failed","data":"Something went wrong with the API"})
@@ -98,6 +97,7 @@ class GetAvatarURLView(APIView):
         image = AvatarURL.objects.filter(user_id=id)
         serializer = AvatarURLSerializer(image, many=True)
         return Response({"status": "success","data":serializer.data})
+
 
 
 

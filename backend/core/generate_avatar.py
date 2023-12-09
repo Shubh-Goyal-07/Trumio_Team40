@@ -62,7 +62,6 @@ def generate_avatar(image_url):
         time.sleep(5)
         response_get = requests.request("GET", geturl, headers=headers)
     
-    
     return response_get.json()
         
 

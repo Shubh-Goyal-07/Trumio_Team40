@@ -27,19 +27,19 @@ class AvatarURLSerializer(serializers.ModelSerializer):
 class CreateVideoSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreateVideo
-        fields = '__all__'
+        # fields = '__all__'
         exclude = ['video_url']
 
 
 class TimelineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Timeline
-        fields = '__all__'
+        # fields = '__all__'
         exclude = ['timeline']
 
 
 class FlashCardSerializer(serializers.ModelSerializer):
     class Meta:
         model = FlashCard
-        fields = '__all__'
+        # fields = '__all__'
         exclude = ['image']
