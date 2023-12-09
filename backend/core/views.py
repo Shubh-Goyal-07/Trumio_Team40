@@ -104,6 +104,7 @@ class CreateVideoView(APIView):
         content = request.POST.get('content')
         uniqid = request.POST.get('unique_id')
         url = 'https://api.d-id.com/talks'
+        topic = request.POST.get('topic')
 
 
         x = unmark(content).replace("\\n"," ")
@@ -169,7 +170,7 @@ class CreateVideoView(APIView):
         print(videourl,4)
         dump_video(videourl,uniqid)
 
-        createvideo_instance = CreateVideo(image_url=imageURL,content=content,user_id=uniqid,unique_id=uniqid,video_url='/media/video/'+str(uniqid)+'.mp4')
+        createvideo_instance = CreateVideo(image_url=imageURL,content=content,user_id=uniqid,unique_id=uniqid,video_url='/media/video/'+str(uniqid)+'.mp4',topic=topic)
         createvideo_instance.save()
         return Response({"status": "success","data":'/media/video/'+str(uniqid)+'.mp4'})
     
