@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Pointers, AudioURL, ImageURL, AvatarURL, CreateVideo, Timeline, FlashCard
 from .serializer import PointersSerializer, AudioURLSerializer, ImageURLSerializer, AvatarURLSerializer, CreateVideoSerializer, TimelineSerializer, FlashCardSerializer
-from .generate_avatar import generate_image
+from .generate_avatar import generate_avatar
 from .generator import generate_lecture
 from .dump_video import dump_video
 from .flashcard import unmark, flashcard_text_generator
@@ -18,13 +18,8 @@ environ.Env.read_env()
 
 
 
-
-
-
-
-
 # backendurl = "https://avatar.rohitkori.tech"
-SECRET_KEY_API = env('SECRET_KEY_API')
+DID_API_KEY = env('DID_API_KEY')
 
 backendurl = "https://avatar.rohitkori.tech/"
 
@@ -32,7 +27,6 @@ backendurl = "https://avatar.rohitkori.tech/"
 class PointersView(APIView):
     queryset = Pointers.objects.all()
     serializer_class = PointersSerializer
-
     def post(self, request):
         topic = request.POST.get('topic')
         pointers = request.POST.get('pointers')
@@ -44,19 +38,13 @@ class PointersView(APIView):
             serializer = PointersSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
-                return Response({"content" : lect_txt})
-            
+                return Response({"content" : lect_txt, "status" : "success","data" : serializer.data})
             return Response(serializer.errors)
         else:
             return Response({"status": "failed","data":"Something went wrong"})
     
 
-class VideoURLView(APIView):
-    def get(self, request):
-        id = request.GET.get('video_id')
-        
-        return Response({"status": "success","data":'/media/video/'+str(id)+'.mp4'})
-    
+
 
 class AudioURLView(APIView):
     queryset = AudioURL.objects.all()
@@ -74,6 +62,7 @@ class AudioURLView(APIView):
         serializer = AudioURLSerializer(audio, many=True)
         return Response({"status": "success","data":serializer.data})
 
+
 class ImageURlView(APIView):
     queryset = ImageURL.objects.all()
     serializer_class = ImageURLSerializer
@@ -82,9 +71,24 @@ class ImageURlView(APIView):
         serializer = ImageURLSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            generate_image(serializer.data['user_id'], backendurl + serializer.data['image_url'])
-            return Response(serializer.data)
-        return Response(serializer.errors)
+            try:
+                avatar_json = generate_avatar(backendurl + serializer.data['image_url'])
+                return Response({"status": "success","data":serializer.data,"avatar":avatar_json})
+            except:
+                return Response({"status": "failed","data":"Something went wrong with the API"})
+        return Response(serializer.errors)  
+
+class SaveAvatarURLView(APIView):
+    queryset = AvatarURL.objects.all()
+    serializer_class = AvatarURLSerializer
+    def post(self, request):
+        serializer = AvatarURLSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"status": "success","data":serializer.data})
+        return Response({"status": "failed","data":serializer.errors})
+    
+    
 
 class GetAvatarURLView(APIView):
     queryset = AvatarURL.objects.all()
@@ -94,17 +98,19 @@ class GetAvatarURLView(APIView):
         image = AvatarURL.objects.filter(user_id=id)
         serializer = AvatarURLSerializer(image, many=True)
         return Response({"status": "success","data":serializer.data})
-    
+
+
 
 class CreateVideoView(APIView):
     queryset = CreateVideo.objects.all()
     serializer_class = CreateVideoSerializer
     def post(self, request):
-        imageURL = request.POST.get('image_url')
+        avatar_url = request.POST.get('avatar_url')
         content = request.POST.get('content')
-        uniqid = request.POST.get('unique_id')
-        url = 'https://api.d-id.com/talks'
+        pointer_id = request.POST.get('unique_id')
+        user_id = request.POST.get('user_id')
         topic = request.POST.get('topic')
+        url = 'https://api.d-id.com/talks'
 
 
         x = unmark(content).replace("\\n"," ")
@@ -113,6 +119,7 @@ class CreateVideoView(APIView):
         y = repr(" ".join(y.split()))
         print(y)
         print(len(y))
+
 
         res_from_post = requests.post(url,
                     headers={
@@ -123,7 +130,7 @@ class CreateVideoView(APIView):
                             "type":"text",
                             "input": str(y[:2000])
                         },
-                        "source_url": backendurl+str(imageURL),
+                        "source_url": avatar_url,
                         "provider":{
                             "type": "amazon" 
                         }
@@ -144,7 +151,7 @@ class CreateVideoView(APIView):
         time.sleep(5)
         res = requests.get(url+'/'+getid,
                     headers={
-                        "Authorization": "Basic "+SECRET_KEY_API
+                        "Authorization": "Basic "+DID_API_KEY
                     },)
 
     
@@ -159,21 +166,20 @@ class CreateVideoView(APIView):
             time.sleep(5)
             res = requests.get(url+'/'+getid,
                     headers={
-                        "Authorization": "Basic "+SECRET_KEY_API
+                        "Authorization": "Basic "+DID_API_KEY
                     },)
             res = res.json()
             print(res)
-            print()
-            print()
         print(res)
         videourl = res.get("result_url")
         print(videourl,4)
-        dump_video(videourl,uniqid)
+        dump_video(videourl,pointer_id)
 
-        createvideo_instance = CreateVideo(image_url=imageURL,content=content,user_id=uniqid,unique_id=uniqid,video_url='/media/video/'+str(uniqid)+'.mp4',topic=topic)
+        createvideo_instance = CreateVideo(avatar_url = avatar_url, content = content, user_id = user_id, pointer_id = pointer_id, video_url = videourl, topic = topic)
         createvideo_instance.save()
-        return Response({"status": "success","data":'/media/video/'+str(uniqid)+'.mp4'})
+        return Response({"status": "success","data":'/media/video/'+str(pointer_id)+'.mp4'})
     
+
 
 class TimelineView(APIView):
     queryset = CreateVideo.objects.all()
@@ -235,7 +241,7 @@ class FlashCardView(APIView):
         summary = request.POST.get('summary')
 
         content = flashcard_text_generator(project_name,summary)
-        image = "https://avatar.rohitkori.tech/media/avatar/arnav.png"
+        image = "https://app.thenextleg.io/image/acf4e728-4984-4816-b496-42a44aef0a89/0.png"
         serializer = FlashCardSerializer(data=request.data)
         flashcard_instance = FlashCard(project_id=project_id,project_name=project_name,summary=summary,image=image,content=content)
         if serializer.is_valid():
@@ -251,7 +257,7 @@ class FlashCardView(APIView):
             return Response({"status": "failed","data":"No data found"})
         flashcard_instance = flashcard[0]
 
-        # print(flashcard_instance.content)
+        # print(flashcard_instance.id)
         data = {
             "project_id": flashcard_instance.project_id,
             "project_name": flashcard_instance.project_name,
@@ -261,6 +267,8 @@ class FlashCardView(APIView):
         }
         return Response({"status": "success","data":data})
     
+
+
 class GetLearningModuleView(APIView):
     def get(self, request):
         video = CreateVideo.objects.all()

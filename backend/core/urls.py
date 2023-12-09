@@ -16,13 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import PointersView, VideoURLView, AudioURLView, ImageURlView, GetAvatarURLView, CreateVideoView, TimelineView, FlashCardView, GetLearningModuleView
+from .views import PointersView, AudioURLView, ImageURlView, GetAvatarURLView, CreateVideoView, TimelineView, FlashCardView, GetLearningModuleView, SaveAvatarURLView
 
 urlpatterns = [
     path('send-pointer', PointersView.as_view(), name='send-pointer'),
-    path('get-videourl',VideoURLView.as_view(), name='get-videourl'),
-    path('audio', AudioURLView.as_view(), name='audio'),
-    path('create-image', ImageURlView.as_view(), name='create-image'),
+    # path('audio', AudioURLView.as_view(), name='audio'),
+    path('create-avatar', ImageURlView.as_view(), name='create-avatar'),
+    path('save-avatar', SaveAvatarURLView.as_view(), name='save-avatar'),
     path('get-avatar', GetAvatarURLView.as_view(), name='get-avatar'),
     path('create-video', CreateVideoView.as_view(), name='create-video'),
     path('timeline', TimelineView.as_view(), name='timeline'),

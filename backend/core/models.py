@@ -9,7 +9,7 @@ class Pointers(models.Model):
     pointers = models.TextField()
     topic = models.CharField(max_length=100)
     def __str__(self):
-        return self.pointer
+        return self.topic
 
 class AudioURL(models.Model):
     user_id = models.CharField(max_length=100, primary_key=True)
@@ -24,26 +24,21 @@ class ImageURL(models.Model):
         return self.user_id
     
 class AvatarURL(models.Model):
+    id = models.AutoField(primary_key=True)
     user_id = models.CharField(max_length=100)
-    image_url = models.FileField(upload_to='avatar/', validators=[FileExtensionValidator(allowed_extensions=['jpg','png','jpeg'])])
+    avatar_url = models.URLField(max_length=255)
     def __str__(self):
-        return self.image_url
-    
-class AvatarURL(models.Model):
-    user_id = models.CharField(max_length=100)
-    image_url = models.FileField(upload_to='avatar/', validators=[FileExtensionValidator(allowed_extensions=['jpg','png','jpeg'])])
-    def __str__(self):
-        return self.image_url
+        return self.avatar_url
 
 class CreateVideo(models.Model):
-    image_url = models.CharField(max_length=100)
+    avatar_url = models.URLField(max_length=255)
     content = models.TextField()
     user_id = models.CharField(max_length=100)
-    unique_id = models.CharField(max_length=100,unique=True)
-    video_url = models.CharField(max_length=100,unique=True)
+    pointer_id = models.ForeignKey(Pointers, on_delete=models.CASCADE)
+    video_url = models.CharField(max_length=100)
     topic = models.CharField(max_length=100)
     def __str__(self):
-        return self.image_url
+        return self.video_url
 
 
 class Timeline(models.Model):
@@ -59,7 +54,7 @@ class FlashCard(models.Model):
     project_id = models.CharField(max_length=100,unique=True)
     project_name = models.CharField(max_length=100)
     summary = models.TextField()
-    image = models.CharField(max_length=100)
+    image = models.URLField(max_length=255)
     content = models.TextField(default="")
     def __str__(self):
         return self.image

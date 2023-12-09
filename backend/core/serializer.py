@@ -6,37 +6,40 @@ from .models import Pointers, AudioURL, ImageURL, CreateVideo, AvatarURL, Timeli
 class PointersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pointers
-        fields = ['id', 'user_id', 'pointers', 'topic']
-
+        fields = '__all__'
+        
 
 class AudioURLSerializer(serializers.ModelSerializer):
     class Meta:
         model = AudioURL
-        fields = ['user_id', 'audio_url']
+        fields = '__all__'
     
 class ImageURLSerializer(serializers.ModelSerializer):
     class Meta:
         model = ImageURL
-        fields = ['id','user_id', 'image_url']
+        fields = '__all__'
 
 class AvatarURLSerializer(serializers.ModelSerializer):
     class Meta:
         model = AvatarURL
-        fields = ['id','user_id', 'image_url']
+        fields = '__all__'
 
 class CreateVideoSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreateVideo
-        fields = ['id','user_id','image_url', 'content','unique_id','topic']
+        fields = '__all__'
+        exclude = ['video_url']
 
 
 class TimelineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Timeline
-        fields = ['id','project_id', 'project_name', 'weeks']
+        fields = '__all__'
+        exclude = ['timeline']
 
 
 class FlashCardSerializer(serializers.ModelSerializer):
     class Meta:
         model = FlashCard
-        fields = ['project_id', 'project_name', 'summary']
+        fields = '__all__'
+        exclude = ['image']

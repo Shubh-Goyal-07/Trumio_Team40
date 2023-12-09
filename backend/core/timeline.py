@@ -8,8 +8,9 @@ environ.Env.read_env()
 
 class Flashcard:
     def __init__(self):
-        
-        palm.configure(api_key=os.environ['GOOGLE_API_KEY'])
+        GOOGLE_API_KEY="AIzaSyBEa6nWeR-ABsc_TOrGL1UN9dBy3m5lHSs"
+        # palm.configure(api_key=os.environ['GOOGLE_API_KEY'])
+        palm.configure(api_key=GOOGLE_API_KEY)
 
     def print_content(self, project, weeks):
         prompt = f'''
