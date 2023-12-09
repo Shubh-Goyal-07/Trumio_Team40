@@ -23,7 +23,7 @@ def preprocess_image(url):
     return img_byte_arr
 
 def generate_avatar(image_url):
-    print(image_url)
+    print("imageurl is ",image_url)
     posturl = "https://api.thenextleg.io/ppu/imagine"
 
     
