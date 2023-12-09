@@ -40,10 +40,12 @@ def generate_avatar(image_url):
     }
 
     response_post = requests.request("POST", posturl, headers=headers, data=payload)
-    if(response_post.json()['success']==False):
+    response_post = response_post.json()
+    if(response_post['success']==False):
+        print(response_post, "in error block")
         raise Exception("Something went wrong with the Avatar API")
     
-
+    print(response_post)
     ppuId = response_post.json()['messageId']
 
     geturl=f"https://api.thenextleg.io/ppu/message/<messageId>?ppuId={ppuId}"
