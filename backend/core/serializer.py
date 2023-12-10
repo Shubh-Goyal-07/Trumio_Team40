@@ -27,19 +27,22 @@ class AvatarURLSerializer(serializers.ModelSerializer):
 class CreateVideoSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreateVideo
-        # fields = '__all__'
-        exclude = ['video_url']
+        fields = '__all__'
+        extra_kwargs = {'video_url': {'read_only': True}}
+        # exclude = ['video_url']
 
 
 class TimelineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Timeline
-        # fields = '__all__'
-        exclude = ['timeline']
+        fields = '__all__'
+        # extra_kwargs = {'timeline': {'read_only': True}}
+        # exclude = ['timeline']
 
 
 class FlashCardSerializer(serializers.ModelSerializer):
     class Meta:
         model = FlashCard
-        # fields = '__all__'
-        exclude = ['image']
+        fields = '__all__'
+        extra_kwargs = {'image': {'read_only': True}}
+        # exclude = ['image']
