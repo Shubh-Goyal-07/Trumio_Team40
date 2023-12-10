@@ -34,7 +34,7 @@ class CreateVideo(models.Model):
     avatar_url = models.URLField(max_length=255)
     content = models.TextField()
     user_id = models.CharField(max_length=100)
-    pointer_id = models.ForeignKey(Pointers, on_delete=models.CASCADE)
+    unique_id = models.ForeignKey(Pointers, on_delete=models.CASCADE)
     video_url = models.CharField(max_length=100)
     topic = models.CharField(max_length=100)
     def __str__(self):

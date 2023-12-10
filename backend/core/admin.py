@@ -32,7 +32,7 @@ class AvatarURLAdmin(admin.ModelAdmin):
         fields = '__all__'
 
 class CreateVideoAdmin(admin.ModelAdmin):
-    list_display = ('avatar_url', 'content', 'user_id', 'pointer_id', 'video_url', 'topic')
+    list_display = ('avatar_url', 'content', 'user_id', 'unique_id', 'video_url', 'topic')
 
     class Meta:
         model = CreateVideo
