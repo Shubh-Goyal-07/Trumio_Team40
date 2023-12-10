@@ -1,0 +1,14 @@
+
+django
+django-cors-headers
+django-environ
+djangorestframework
+langchain
+pillow
+requests
+markdown
+chromadb
+BeautifulSoup4
+pysqlite3-binary
+charset-normalizer
+google-generativeai
