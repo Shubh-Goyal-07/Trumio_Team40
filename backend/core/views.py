@@ -105,6 +105,7 @@ class CreateVideoView(APIView):
     queryset = CreateVideo.objects.all()
     serializer_class = CreateVideoSerializer
     def post(self, request):
+        print(DID_API_KEY)
         avatar_url = request.POST.get('avatar_url')
         content = request.POST.get('content')
         pointer_id = request.POST.get('unique_id')
@@ -112,7 +113,13 @@ class CreateVideoView(APIView):
         topic = request.POST.get('topic')
         url = 'https://api.d-id.com/talks'
 
-
+        serializer = CreateVideoSerializer(data=request.data)
+        if serializer.is_valid():
+            print("yes")
+            # serializer.save()
+        else:
+            return Response({"status": "failed","data":serializer.errors})
+        
         x = unmark(content).replace("\\n"," ")
         y = x.replace("*"," ")
         y = y.replace(":"," ")
@@ -133,50 +140,17 @@ class CreateVideoView(APIView):
                         "source_url": avatar_url,
                         "provider":{
                             "type": "amazon" 
+                        },
+                        "face":{
+                            "size":1024,
+                            "top_left":[0,0]
                         }
-                    },timeout=500
+                    }
                       )
-        
-        print(res_from_post.json(),1)
-        if(res_from_post.status_code==400):
-            return Response({"status": "failed","data":"Something went wrong"})
-        res_from_post = res_from_post.json()
-        print(res_from_post,2)
-
-        getid = res_from_post.get('id')
-        if(getid is None): return Response({"status": "failed","data":res_from_post.get('kind')})
-        print(getid)
-        
-
-        res = requests.get(url+'/'+getid,
-                    headers={
-                        "Authorization": "Basic "+DID_API_KEY
-                    },)
-
+        return Response(res_from_post.json())
     
-        if(res.status_code==400):
-            return Response({"status": "failed","data":"Something went wrong"})
-        res = res.json()
-        print(res,3)
-        
-        print(res.get("status"))
 
-        while(res.get("status")!="done"):
-            res = requests.get(url+'/'+getid,
-                    headers={
-                        "Authorization": "Basic "+DID_API_KEY
-                    },)
-            res = res.json()
-            print(res)
-        print(res)
-        videourl = res.get("result_url")
-        print(videourl,4)
-        dump_video(videourl,pointer_id)
 
-        createvideo_instance = CreateVideo(avatar_url = avatar_url, content = content, user_id = user_id, pointer_id = pointer_id, video_url = videourl, topic = topic)
-        createvideo_instance.save()
-        return Response({"status": "success","data":'/media/video/'+str(pointer_id)+'.mp4'})
-    
 
 
 class TimelineView(APIView):
