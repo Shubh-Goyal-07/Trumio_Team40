@@ -192,6 +192,8 @@ class TimelineView(APIView):
         id = request.GET.get('project_id')
         timeline = Timeline.objects.filter(project_id=id)
 
+        if(len(timeline)==0):
+            return Response({"status": "failed","data":"No data found"})
         timeline0 = timeline[0]
 
         splitteddata = timeline0.timeline.split("Week")
