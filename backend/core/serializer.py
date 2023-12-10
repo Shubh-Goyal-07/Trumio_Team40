@@ -36,7 +36,7 @@ class TimelineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Timeline
         fields = '__all__'
-        # extra_kwargs = {'timeline': {'read_only': True}}
+        extra_kwargs = {'timeline': {'read_only': True}}
         # exclude = ['timeline']
 
 
