@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework.response import Response
+from drf_yasg.utils import swagger_auto_schema
 
 # Create your views here.
 import requests
@@ -12,6 +13,7 @@ from .timeline import timeline_generator
 class TimelineView(APIView):
     queryset = Timeline.objects.all()
     serializer_class = TimelineSerializer
+    @swagger_auto_schema(request_body=TimelineSerializer)
     def post(self, request):
         project_id = request.POST.get('project_id')
         project_name = request.POST.get('project_name')

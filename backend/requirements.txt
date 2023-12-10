@@ -12,3 +12,4 @@ BeautifulSoup4
 pysqlite3-binary
 charset-normalizer
 google-generativeai
+drf-yasg

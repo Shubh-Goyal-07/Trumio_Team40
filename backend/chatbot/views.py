@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.
-
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -23,6 +23,7 @@ projectidToLink={}
 class InitiateSession(APIView):
     queryset = ProjectSession.objects.all()
     serializer_class = ProjectSessionSerializer
+    @swagger_auto_schema(request_body=ProjectSessionSerializer)
     def post(self, request):
         project_id = request.data.get('project_id')
         project_link = request.data.get('project_link')
@@ -46,6 +47,7 @@ class Chat(APIView):
     permission_classes = [AllowAny]
     queryset = ChatSession.objects.all()
     serializer_class = ChatSessionSerializer
+    @swagger_auto_schema(request_body=ChatSessionSerializer)
     def post(self, request):
         session_id = request.data.get('project_id')+"|"+request.data.get('user_id')
         question = request.data.get('question')

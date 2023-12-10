@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'learninghub',
     'chatbot',
     'timeline',
+    'drf_yasg'
 ]
 
 MIDDLEWARE = [
@@ -80,6 +81,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
+CSRF_TRUSTED_ORIGINS = ['https://avatar.rohitkori.tech']
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
