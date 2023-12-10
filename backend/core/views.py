@@ -137,18 +137,17 @@ class CreateVideoView(APIView):
                     },timeout=500
                       )
         
-        print(res_from_post,1)
+        print(res_from_post.json(),1)
         if(res_from_post.status_code==400):
             return Response({"status": "failed","data":"Something went wrong"})
         res_from_post = res_from_post.json()
-        
         print(res_from_post,2)
 
         getid = res_from_post.get('id')
         if(getid is None): return Response({"status": "failed","data":res_from_post.get('kind')})
         print(getid)
         
-        time.sleep(5)
+
         res = requests.get(url+'/'+getid,
                     headers={
                         "Authorization": "Basic "+DID_API_KEY
@@ -163,7 +162,6 @@ class CreateVideoView(APIView):
         print(res.get("status"))
 
         while(res.get("status")!="done"):
-            time.sleep(5)
             res = requests.get(url+'/'+getid,
                     headers={
                         "Authorization": "Basic "+DID_API_KEY
