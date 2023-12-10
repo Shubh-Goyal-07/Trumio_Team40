@@ -41,28 +41,7 @@ def generate_avatar(image_url):
 
     response_post = requests.request("POST", posturl, headers=headers, data=payload)
     response_post = response_post.json()
-    if(response_post['success']==False):
-        print(response_post, "in error block")
-        raise Exception("Something went wrong with the Avatar API")
-    
-    print(response_post)
-
-    ppuId = response_post['ppuId']
-    messageId = response_post['messageId']
-
-    geturl=f"https://api.thenextleg.io/ppu/message/{messageId}?ppuId={ppuId}"
-
-    headers = {
-        'Authorization': 'Bearer '+os.environ['NEXT_LEG_API_KEY'],
-    }
-
-    response_get = requests.request("GET", geturl, headers=headers)
-
-    while((response_get.json())['progress']!=100):
-        time.sleep(5)
-        response_get = requests.request("GET", geturl, headers=headers)
-    
-    return response_get.json()
+    return response_post
         
 
 
