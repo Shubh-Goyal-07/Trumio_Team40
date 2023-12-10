@@ -159,7 +159,7 @@ class SaveVideoView(APIView):
         topic = request.POST.get('topic')
         video_url = request.POST.get('video_url')
 
-        pointer = Pointers.objects.filter(id=unique_id)
+        pointer = Pointers.objects.filter(id=unique_id).first()
 
         # dump_video(video_url,unique_id)
         # domainvideourl = f"/media/video/{str(unique_id)}.mp4"
