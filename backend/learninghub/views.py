@@ -1,5 +1,6 @@
 from django.shortcuts import render
 # Create your views here.
+from drf_yasg.utils import swagger_auto_schema
 import requests
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -26,6 +27,7 @@ DID_API_KEY = env('DID_API_KEY')
 class PointersView(APIView):
     queryset = Pointers.objects.all()
     serializer_class = PointersSerializer
+    @swagger_auto_schema(request_body=PointersSerializer)
     def post(self, request):
         topic = request.POST.get('topic')
         pointers = request.POST.get('pointers')
@@ -49,7 +51,7 @@ class PointersView(APIView):
 class ImageURlView(APIView):
     queryset = ImageURL.objects.all()
     serializer_class = ImageURLSerializer
-    
+    @swagger_auto_schema(request_body=ImageURLSerializer)
     def post(self,request):
         serializer = ImageURLSerializer(data=request.data)
         if serializer.is_valid():
@@ -64,6 +66,7 @@ class ImageURlView(APIView):
 class SaveAvatarURLView(APIView):
     queryset = AvatarURL.objects.all()
     serializer_class = AvatarURLSerializer
+    @swagger_auto_schema(request_body=AvatarURLSerializer)
     def post(self, request):
         serializer = AvatarURLSerializer(data=request.data)
         if serializer.is_valid():
@@ -88,6 +91,7 @@ class GetAvatarURLView(APIView):
 class CreateVideoView(APIView):
     queryset = CreateVideo.objects.all()
     serializer_class = CreateVideoSerializer
+    @swagger_auto_schema(request_body=CreateVideoSerializer)
     def post(self, request):
         print(DID_API_KEY)
         avatar_url = request.POST.get('avatar_url')
@@ -135,6 +139,7 @@ class CreateVideoView(APIView):
     
 
 class SaveVideoView(APIView):
+    @swagger_auto_schema(request_body=CreateVideoSerializer)
     def post(self,request):
         avatar_url = request.POST.get('avatar_url')
         content = request.POST.get('content')
@@ -158,6 +163,7 @@ class SaveVideoView(APIView):
 class FlashCardView(APIView):
     queryset = FlashCard.objects.all()
     serializer_class = FlashCardSerializer
+    @swagger_auto_schema(request_body=FlashCardSerializer)
     def post(self, request):
         project_id = request.POST.get('project_id')
         project_name = request.POST.get('project_name')
