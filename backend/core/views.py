@@ -159,12 +159,12 @@ class SaveVideoView(APIView):
         topic = request.POST.get('topic')
         video_url = request.POST.get('video_url')
 
-        dump_video(video_url,unique_id)
-        domainvideourl = f"/media/video/{str(unique_id)}.mp4"
-        createvideo_instance = CreateVideo(avatar_url=avatar_url,content = content, user_id = user_id, unique_id = unique_id, video_url = domainvideourl, topic = topic)
+        # dump_video(video_url,unique_id)
+        # domainvideourl = f"/media/video/{str(unique_id)}.mp4"
+        createvideo_instance = CreateVideo(avatar_url=avatar_url,content = content, user_id = user_id, unique_id = unique_id, video_url = video_url, topic = topic)
         createvideo_instance.save()
 
-        return Response({"status": "success", "url":domainvideourl})
+        return Response({"status": "success", "url":video_url})
 
 
 
