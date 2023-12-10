@@ -28,7 +28,7 @@ def generate_avatar(image_url):
 
     
     payload = json.dumps({
-    "msg": f"{image_url} full body, realistic detailed 3d avatar with nice human facial features, life like expression, realistic skin tone, facial details and expressions, light condition for accurate representation",
+    "msg": f"{image_url} full body, realistic detailed 3d avatar with nice human facial features, life like expression, realistic skin tone, facial details and expressions, light condition for accurate representation".format(image_url),
     "ref": "",
     "webhookOverride": "", 
     "ignorePrefilter": "false"
@@ -59,7 +59,6 @@ def generate_avatar(image_url):
     response_get = requests.request("GET", geturl, headers=headers)
 
     while((response_get.json())['progress']!=100):
-        time.sleep(5)
         response_get = requests.request("GET", geturl, headers=headers)
     
     return response_get.json()
